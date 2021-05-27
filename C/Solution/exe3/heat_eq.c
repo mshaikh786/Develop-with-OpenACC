@@ -31,6 +31,10 @@
 #define CHKPNT_ITER	100
 #endif
 
+#ifdef PLATFORM_AMD
+#undef fmaxf
+#define fmaxf(a,b) (( (a) > (b)) ? (a) : (b))
+#endif
 
 void init_grid();
 

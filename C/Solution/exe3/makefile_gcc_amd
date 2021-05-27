@@ -1,0 +1,22 @@
+CC=gcc-11
+ifeq ($(VIS),1)
+	INC=-DVIS -I../../include/
+endif
+ACC_FLAGS  = -fopenacc 
+ACC_FLAGS += -foffload=amdgcn-amdhsa="-march=gfx908" -DPLATFORM_AMD
+LDFLAGS    = -lm
+
+CFLAGS=$(ACC_FLAGS) -DROWS=200 -DCOLS=200 -DMAX_ITER=100 $(INC)
+EXE=heat_eq_acc_v2
+all: heat_eq_acc_v2
+
+heat_eq_acc_v2: heat_eq.o
+	$(CC) $(CFLAGS) heat_eq.o -o $(EXE) $(LDFLAGS)
+
+%.o: %.c
+		$(CC) -c -o $@ $< $(CFLAGS)
+
+clean:
+		rm *.o $(EXE)
+cleanall:
+		rm *.o *.out *.vtk $(EXE)
